@@ -1,0 +1,3 @@
+hidden_sz: 64
+input_sz: 10
+lr: 0.001
