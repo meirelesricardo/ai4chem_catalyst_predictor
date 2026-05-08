@@ -4799,6 +4799,102 @@ reactant_1,reactant_2,ligand,ligand_eq,base,base_eq,solvent,yield_uv
 6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,K3PO4,2.5,MeCN,44.0678311835166
 6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,K3PO4,2.5,MeCN,0.0
 6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,K3PO4,2.5,MeCN,21.140243589312
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,None,0.0,THF_V2,25.6971960146957
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,None,0.0,THF_V2,25.7441357934166
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,None,0.0,THF_V2,22.5905272184984
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,None,0.0,THF_V2,18.966079390314
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,None,0.0,THF_V2,15.8627568372741
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,None,0.0,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,NaOH,2.5,THF_V2,30.1332294672132
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,NaOH,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,NaOH,2.5,THF_V2,28.492346941329
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,NaOH,2.5,THF_V2,21.737650098077
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,NaOH,2.5,THF_V2,27.6627308063785
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,NaOH,2.5,THF_V2,35.7598569740842
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,NaOH,2.5,THF_V2,30.2432375388826
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,NaOH,2.5,THF_V2,41.2736260055726
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,NaOH,2.5,THF_V2,23.7224478866646
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,NaOH,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,NaOH,2.5,THF_V2,19.462159963952
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,NaOH,2.5,THF_V2,26.6172683508653
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,KOH,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,KOH,2.5,THF_V2,44.9508840659366
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,KOH,2.5,THF_V2,41.8683830698244
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,KOH,2.5,THF_V2,30.9365742941766
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,KOH,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,KOH,2.5,THF_V2,38.9859309997999
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,KOH,2.5,THF_V2,38.2013247681786
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,KOH,2.5,THF_V2,49.9661027735402
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,KOH,2.5,THF_V2,46.2116705140599
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,KOH,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,KOH,2.5,THF_V2,19.2710962027893
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,KOH,2.5,THF_V2,34.9989172313956
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,LiOtBu,2.5,THF_V2,52.4719296011214
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,LiOtBu,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,LiOtBu,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,LiOtBu,2.5,THF_V2,35.1034608282083
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,LiOtBu,2.5,THF_V2,40.6886235683916
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,LiOtBu,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,LiOtBu,2.5,THF_V2,35.2168500434486
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,LiOtBu,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,LiOtBu,2.5,THF_V2,41.4185963376097
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,LiOtBu,2.5,THF_V2,23.7681054107928
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,LiOtBu,2.5,THF_V2,17.9787210615856
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,LiOtBu,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,NaHCO3,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,NaHCO3,2.5,THF_V2,65.6934908541084
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,NaHCO3,2.5,THF_V2,60.4993448803632
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,NaHCO3,2.5,THF_V2,26.6631486656218
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,NaHCO3,2.5,THF_V2,36.9222683664951
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,NaHCO3,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,NaHCO3,2.5,THF_V2,21.2966698555221
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,NaHCO3,2.5,THF_V2,50.1770683856292
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,NaHCO3,2.5,THF_V2,42.1841088212454
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,NaHCO3,2.5,THF_V2,49.1206490252276
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,NaHCO3,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,NaHCO3,2.5,THF_V2,22.9306439275464
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,Et3N,2.5,THF_V2,38.9025643582392
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,Et3N,2.5,THF_V2,35.7872428090058
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,Et3N,2.5,THF_V2,35.7353331838505
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,Et3N,2.5,THF_V2,17.5647169938363
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,Et3N,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,Et3N,2.5,THF_V2,32.0524529714214
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,Et3N,2.5,THF_V2,19.251614787724
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,Et3N,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,Et3N,2.5,THF_V2,24.6663269236064
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,Et3N,2.5,THF_V2,27.8663569271257
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,Et3N,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,Et3N,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,CsF,2.5,THF_V2,25.7135426482769
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,CsF,2.5,THF_V2,36.7451692076121
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,CsF,2.5,THF_V2,44.5185390058507
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,CsF,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,CsF,2.5,THF_V2,26.7863104866736
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,CsF,2.5,THF_V2,36.7358407872455
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,CsF,2.5,THF_V2,28.6677655448648
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,CsF,2.5,THF_V2,42.8097016860582
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,CsF,2.5,THF_V2,15.2003609862855
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,CsF,2.5,THF_V2,37.1303584041165
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,CsF,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,CsF,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,K3PO4,2.5,THF_V2,30.9680268770552
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,K3PO4,2.5,THF_V2,33.2516832578732
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,K3PO4,2.5,THF_V2,42.5240403393453
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Cy)3,0.125,K3PO4,2.5,THF_V2,17.5246577405026
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(o-Tol)3,0.125,K3PO4,2.5,THF_V2,30.6447804574248
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",CataCXium A,0.125,K3PO4,2.5,THF_V2,39.7255116428075
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",SPhos,0.125,K3PO4,2.5,THF_V2,21.7742964782331
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dtbpf,0.125,K3PO4,2.5,THF_V2,44.0041930084065
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",XPhos,0.125,K3PO4,2.5,THF_V2,33.3251921704611
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",dppf,0.125,K3PO4,2.5,THF_V2,34.5062877645475
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",Xantphos,0.125,K3PO4,2.5,THF_V2,0.0
+6-quinoline-boronic acid hydrochloride,"2d, Bromide",None,0.0,K3PO4,2.5,THF_V2,19.1539986468249
 6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(tBu)3,0.125,None,0.0,DMF,0.0
 6-quinoline-boronic acid hydrochloride,"2d, Bromide",P(Ph)3 ,0.125,None,0.0,DMF,0.0
 6-quinoline-boronic acid hydrochloride,"2d, Bromide",AmPhos,0.125,None,0.0,DMF,0.0
