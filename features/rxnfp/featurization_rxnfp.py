@@ -81,8 +81,12 @@ reaction_smiles = (
 
 # Load RXNFP model and generate fingerprints (256-dim continuous vectors)
 model, tokenizer = get_default_model_and_tokenizer()
+# Patch for newer transformers compatibility
+tokenizer.encode_plus = tokenizer._encode_plus
+
 rxnfp_generator = RXNBERTFingerprintGenerator(model=model, tokenizer=tokenizer)
-rxnfp_array = np.array(rxnfp_generator.convert_batch(reaction_smiles))
+
+rxnfp_array = np.array([rxnfp_generator.convert(smi) for smi in reaction_smiles])
 
 ligand_array  = np.array([get_desc(ligand_cache,  l) for l in df["ligand"]])
 base_array    = np.array([get_desc(base_cache,    b) for b in df["base"]])
