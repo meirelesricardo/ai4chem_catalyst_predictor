@@ -43,24 +43,24 @@ def test_model(model_name, y_true, y_pred):
 
 # Define a simple feedforward neural network using PyTorch Lightning
 class NeuralNetwork(pl.LightningModule):
-    def __init__(self, input_sz, hidden_sz=128, lr=1e-3):
+    def __init__(self, input_sz, hidden_sz=128, lr=1e-4):
         super().__init__()
 
         self.net = torch.nn.Sequential(
             torch.nn.Linear(input_sz, hidden_sz), # There is currently 3 hidden layers, but this can be easily changed by adding more blocks of Linear, ReLU, BatchNorm, and Dropout
             torch.nn.ReLU(),
             torch.nn.BatchNorm1d(hidden_sz),
-            torch.nn.Dropout(0.3),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Linear(hidden_sz, hidden_sz),
             torch.nn.ReLU(),
             torch.nn.BatchNorm1d(hidden_sz),
-            torch.nn.Dropout(0.3),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Linear(hidden_sz, hidden_sz),
             torch.nn.ReLU(),
             torch.nn.BatchNorm1d(hidden_sz),
-            torch.nn.Dropout(0.3),
+            torch.nn.Dropout(0.4),
 
             torch.nn.Linear(hidden_sz, 1)
         )
@@ -102,7 +102,7 @@ class ESOLDataset(Dataset):
 
 # Define a PyTorch Lightning DataModule for handling data loading
 class NeuralNetworkDataModule(pl.LightningDataModule):
-    def __init__(self, train_dataset, val_dataset, test_dataset, batch_size=256):
+    def __init__(self, train_dataset, val_dataset, test_dataset, batch_size=128):
         super().__init__()
         self.train_dataset = train_dataset
         self.val_dataset = val_dataset
