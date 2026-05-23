@@ -8,6 +8,7 @@ from rdkit.Chem import AllChem
 from sklearn.preprocessing import RobustScaler
 from scipy.spatial.distance import cdist
 import joblib
+from itertools import product
 
 # ─────────────────────────────────────────────
 # Reaction component SMILES
@@ -60,8 +61,7 @@ SOLVENT_SMILES = {
 }
 
 # ─────────────────────────────────────────────
-# FIX 2 — Morgan fingerprints pour ligand / base / solvant
-# Remplace les descripteurs RDKit, trop fragiles sur molécules ioniques
+# Morgan fingerprints pour ligand / base / solvant
 # ─────────────────────────────────────────────
 
 FP_RADIUS = 2
@@ -85,15 +85,34 @@ def get_desc(cache, key):
     return ZERO if isinstance(key, float) and math.isnan(key) else cache[key]
 
 # ─────────────────────────────────────────────
-# Main featurization
+# Générer toutes les combinaisons possibles
 # ─────────────────────────────────────────────
 
-df = pd.read_csv(os.path.join(os.path.dirname(__file__), "suzuki_cleaned.csv"))
+all_combis = pd.DataFrame(
+    list(product(
+        REACTANT_1_SMILES.keys(),
+        REACTANT_2_SMILES.keys(),
+        LIGAND_SMILES.keys(),
+        BASE_SMILES.keys(),
+        SOLVENT_SMILES.keys(),
+    )),
+    columns=["reactant_1", "reactant_2", "ligand", "base", "solvent"]
+)
 
-# Build reaction SMILES and encode with DRFP
+# Merger avec le CSV pour récupérer les yields connus
+df = pd.read_csv(os.path.join(os.path.dirname(__file__), "suzuki_cleaned.csv"))
+all_combis = all_combis.merge(df, on=["reactant_1", "reactant_2", "ligand", "base", "solvent"], how="left")
+# → les combinaisons non testées auront yield_uv = NaN
+
+print(f"Total combinations: {len(all_combis)} ({all_combis['yield_uv'].notna().sum()} known, {all_combis['yield_uv'].isna().sum()} unknown)")
+
+# ─────────────────────────────────────────────
+# Featurization sur TOUTES les combinaisons
+# ─────────────────────────────────────────────
+
 reaction_smiles = (
-    df["reactant_1"].map(REACTANT_1_SMILES) + "." +
-    df["reactant_2"].map(REACTANT_2_SMILES) + ">>"
+    all_combis["reactant_1"].map(REACTANT_1_SMILES) + "." +
+    all_combis["reactant_2"].map(REACTANT_2_SMILES) + ">>"
 ).tolist()
 
 print("Encoding DRFP fingerprints...")
@@ -103,52 +122,57 @@ fps = DrfpEncoder.encode(
 )
 drfp_array = np.array(fps)
 
-# Build condition fingerprints (ligand / base / solvent) — Morgan ECFP4
-ligand_array  = np.array([get_desc(ligand_cache,  l) for l in df["ligand"]])
-base_array    = np.array([get_desc(base_cache,    b) for b in df["base"]])
-solvent_array = np.array([get_desc(solvent_cache, s) for s in df["solvent"]])
+# Morgan fingerprints — sur all_combis
+ligand_array  = np.array([get_desc(ligand_cache,  l) for l in all_combis["ligand"]])
+base_array    = np.array([get_desc(base_cache,    b) for b in all_combis["base"]])
+solvent_array = np.array([get_desc(solvent_cache, s) for s in all_combis["solvent"]])
 
-# Numerical and categorical conditions
-conditions_num = df[["ligand_eq", "base_eq"]].values
+# Numerical conditions — fillna(0) pour les combinaisons non testées
+conditions_num = all_combis[["ligand_eq", "base_eq"]].fillna(0).values
 
+# Categorical conditions
 conditions_cat = pd.get_dummies(
-    df[["ligand", "base", "solvent"]], dummy_na=True
+    all_combis[["ligand", "base", "solvent"]], dummy_na=True
 ).values.astype(float)
 
 # ─────────────────────────────────────────────
-# FIX 1 — Clean DRFP/Morgan séparément,
-# conditions_cat et conditions_num ne sont JAMAIS droppés
+# Nettoyage DRFP/Morgan
 # ─────────────────────────────────────────────
 
 rdkit_block = np.concatenate([drfp_array, ligand_array, base_array, solvent_array], axis=1)
 drop = np.isnan(rdkit_block).any(0) | np.isinf(rdkit_block).any(0) | (np.var(rdkit_block, 0) == 0)
 rdkit_clean = rdkit_block[:, ~drop]
 
-# conditions_num et conditions_cat passent toujours — ne pas filtrer
 X = np.concatenate([rdkit_clean, conditions_num, conditions_cat], axis=1)
-y = df["yield_uv"].values / 100.0
 
-# Track how many DRFP columns remain after cleaning
+# Target — NaN pour les combinaisons non testées
+y = all_combis["yield_uv"].values / 100.0
+
+# Masque des lignes avec un yield connu
+known_mask = all_combis["yield_uv"].notna().values
+
+X_known = X[known_mask]
+y_known = y[known_mask]
+
 n_drfp_clean = (~drop[:2048]).sum()
 print(f"DRFP dims after cleaning: {n_drfp_clean} / 2048")
 print(f"Total feature dims: {X.shape[1]}")
 
 # ─────────────────────────────────────────────
 # Stratified diversity-based train/test split
-# Maximin + Jaccard within each yield bin ensures
-# both chemical diversity and yield balance.
+# sur les lignes connues uniquement
 # ─────────────────────────────────────────────
 
 print("\nRunning stratified diversity-based train/test split...")
 n_bins = 10
-bin_labels = pd.qcut(y, q=n_bins, labels=False)
+bin_labels = pd.qcut(y_known, q=n_bins, labels=False)
 
 train_idx, test_idx = [], []
 for b in range(n_bins):
     bin_mask = np.where(bin_labels == b)[0]
     n_train_bin = int(len(bin_mask) * 0.8)
 
-    X_bin = X[bin_mask, :n_drfp_clean]
+    X_bin = X_known[bin_mask, :n_drfp_clean]
     distances = cdist(X_bin, X_bin, metric='jaccard')
     selected = [np.random.default_rng(42).integers(0, len(X_bin))]
     for _ in range(n_train_bin - 1):
@@ -162,16 +186,17 @@ for b in range(n_bins):
 train_idx = np.array(train_idx)
 test_idx  = np.array(test_idx)
 
-X_train, X_test = X[train_idx], X[test_idx]
-y_train, y_test = y[train_idx], y[test_idx]
+X_train, X_test = X_known[train_idx], X_known[test_idx]
+y_train, y_test = y_known[train_idx], y_known[test_idx]
 
 # ─────────────────────────────────────────────
-# RobustScaler — fit on train, apply to both
+# RobustScaler — fit sur train, appliqué à tout
 # ─────────────────────────────────────────────
 
 scaler = RobustScaler()
-X_train_scaled = np.clip(scaler.fit_transform(X_train), -10, 10)
-X_test_scaled  = np.clip(scaler.transform(X_test), -10, 10)
+X_train_scaled    = np.clip(scaler.fit_transform(X_train), -10, 10)
+X_test_scaled     = np.clip(scaler.transform(X_test), -10, 10)
+X_features_scaled = np.clip(scaler.transform(X), -10, 10)   # toutes les combinaisons
 
 # ─────────────────────────────────────────────
 # Save everything
@@ -179,17 +204,18 @@ X_test_scaled  = np.clip(scaler.transform(X_test), -10, 10)
 
 out_dir = os.path.dirname(__file__)
 
-np.save(os.path.join(out_dir, "X_features.npy"), X)
-np.save(os.path.join(out_dir, "y_target.npy"),   y)
-np.save(os.path.join(out_dir, "X_train.npy"), X_train_scaled)
-np.save(os.path.join(out_dir, "X_test.npy"),  X_test_scaled)
-np.save(os.path.join(out_dir, "y_train.npy"), y_train)
-np.save(os.path.join(out_dir, "y_test.npy"),  y_test)
+np.save(os.path.join(out_dir, "X_features.npy"), X_features_scaled)   # toutes les combis, scaled
+np.save(os.path.join(out_dir, "y_target.npy"),   y)                    # yields + NaN pour inconnues
+np.save(os.path.join(out_dir, "X_train.npy"),    X_train_scaled)
+np.save(os.path.join(out_dir, "X_test.npy"),     X_test_scaled)
+np.save(os.path.join(out_dir, "y_train.npy"),    y_train)
+np.save(os.path.join(out_dir, "y_test.npy"),     y_test)
 joblib.dump(scaler, os.path.join(out_dir, "feature_scaler.pth"))
 
 print(f"\nDone ✅")
-print(f"  Full dataset  — X: {X.shape}, y: {y.shape}")
-print(f"  Train set     — {X_train_scaled.shape[0]} samples (80%)")
-print(f"  Test set      — {X_test_scaled.shape[0]} samples (20%)")
-print(f"  Split method  — stratified maximin | metric: jaccard")
-print(f"  Scaler saved  — feature_scaler.pth")
+print(f"  All combinations  — X: {X_features_scaled.shape}, y: {y.shape}")
+print(f"  Known only        — {X_known.shape[0]} samples")
+print(f"  Train set         — {X_train_scaled.shape[0]} samples (80%)")
+print(f"  Test set          — {X_test_scaled.shape[0]} samples (20%)")
+print(f"  Split method      — stratified maximin | metric: jaccard")
+print(f"  Scaler saved      — feature_scaler.pth")
