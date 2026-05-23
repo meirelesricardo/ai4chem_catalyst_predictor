@@ -4,8 +4,7 @@ import pandas as pd
 import math
 from drfp import DrfpEncoder
 from rdkit import Chem
-from rdkit.Chem import Descriptors
-from rdkit.ML.Descriptors import MoleculeDescriptors
+from rdkit.Chem import AllChem
 from sklearn.preprocessing import RobustScaler
 from scipy.spatial.distance import cdist
 import joblib
@@ -61,22 +60,26 @@ SOLVENT_SMILES = {
 }
 
 # ─────────────────────────────────────────────
-# RDKit descriptor calculator
+# FIX 2 — Morgan fingerprints pour ligand / base / solvant
+# Remplace les descripteurs RDKit, trop fragiles sur molécules ioniques
 # ─────────────────────────────────────────────
 
-DESC_NAMES = [d[0] for d in Descriptors.descList]
-calculator = MoleculeDescriptors.MolecularDescriptorCalculator(DESC_NAMES)
+FP_RADIUS = 2
+FP_NBITS  = 512
 
-def smiles_to_descriptors(smi):
+def smiles_to_morgan(smi):
+    """Encode le plus grand fragment d'un SMILES en Morgan fingerprint (ECFP4)."""
     parts = smi.split('.')
     best = max(parts, key=lambda s: (Chem.MolFromSmiles(s) or Chem.MolFromSmiles('C')).GetNumAtoms())
     mol = Chem.MolFromSmiles(best)
-    return np.array(calculator.CalcDescriptors(mol), dtype=float) if mol else np.full(len(DESC_NAMES), np.nan)
+    if mol is None:
+        return np.zeros(FP_NBITS)
+    return np.array(AllChem.GetMorganFingerprintAsBitVect(mol, FP_RADIUS, FP_NBITS), dtype=float)
 
-ligand_cache  = {k: smiles_to_descriptors(v) for k, v in LIGAND_SMILES.items()}
-base_cache    = {k: smiles_to_descriptors(v) for k, v in BASE_SMILES.items()}
-solvent_cache = {k: smiles_to_descriptors(v) for k, v in SOLVENT_SMILES.items()}
-ZERO = np.zeros(len(DESC_NAMES))
+ligand_cache  = {k: smiles_to_morgan(v) for k, v in LIGAND_SMILES.items()}
+base_cache    = {k: smiles_to_morgan(v) for k, v in BASE_SMILES.items()}
+solvent_cache = {k: smiles_to_morgan(v) for k, v in SOLVENT_SMILES.items()}
+ZERO = np.zeros(FP_NBITS)
 
 def get_desc(cache, key):
     return ZERO if isinstance(key, float) and math.isnan(key) else cache[key]
@@ -100,20 +103,35 @@ fps = DrfpEncoder.encode(
 )
 drfp_array = np.array(fps)
 
-# Build condition descriptors (ligand / base / solvent)
+# Build condition fingerprints (ligand / base / solvent) — Morgan ECFP4
 ligand_array  = np.array([get_desc(ligand_cache,  l) for l in df["ligand"]])
 base_array    = np.array([get_desc(base_cache,    b) for b in df["base"]])
 solvent_array = np.array([get_desc(solvent_cache, s) for s in df["solvent"]])
 
-# Concatenate and clean
-X_raw = np.concatenate([drfp_array, ligand_array, base_array, solvent_array], axis=1)
-drop  = np.isnan(X_raw).any(0) | np.isinf(X_raw).any(0) | (np.var(X_raw, 0) == 0)
-X = X_raw[:, ~drop]
+# Numerical and categorical conditions
+conditions_num = df[["ligand_eq", "base_eq"]].values
+
+conditions_cat = pd.get_dummies(
+    df[["ligand", "base", "solvent"]], dummy_na=True
+).values.astype(float)
+
+# ─────────────────────────────────────────────
+# FIX 1 — Clean DRFP/Morgan séparément,
+# conditions_cat et conditions_num ne sont JAMAIS droppés
+# ─────────────────────────────────────────────
+
+rdkit_block = np.concatenate([drfp_array, ligand_array, base_array, solvent_array], axis=1)
+drop = np.isnan(rdkit_block).any(0) | np.isinf(rdkit_block).any(0) | (np.var(rdkit_block, 0) == 0)
+rdkit_clean = rdkit_block[:, ~drop]
+
+# conditions_num et conditions_cat passent toujours — ne pas filtrer
+X = np.concatenate([rdkit_clean, conditions_num, conditions_cat], axis=1)
 y = df["yield_uv"].values / 100.0
 
 # Track how many DRFP columns remain after cleaning
 n_drfp_clean = (~drop[:2048]).sum()
 print(f"DRFP dims after cleaning: {n_drfp_clean} / 2048")
+print(f"Total feature dims: {X.shape[1]}")
 
 # ─────────────────────────────────────────────
 # Stratified diversity-based train/test split
