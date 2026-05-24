@@ -109,7 +109,7 @@ np.save("data/final/y_test.npy",  y_test)
 
 np.save("data/final/X_features.npy", X)
 np.save("data/final/y_target.npy",   y)          
-torch.save(scaler, "data/processed/scaler.pth")
+torch.save(scaler, "data/final/scaler.pth")
 
 print(f"Total  — X: {X.shape}, y: {y.shape}")
 print(f"Train  — X_train: {X_train.shape}, y_train: {y_train.shape}")
