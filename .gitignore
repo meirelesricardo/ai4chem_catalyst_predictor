@@ -1,0 +1,7 @@
+# Environment files
+.venv/
+
+ # Neural network log files
+ lightning_logs/
+
+ 
