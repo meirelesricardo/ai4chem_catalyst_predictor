@@ -2,7 +2,7 @@
 How to run the predictor on terminal:
 
 cd predictor
-python run_predictor2.py
+python run_predictor.py
 
 
 This script allows the user to run a prediction by choosing from the possible
