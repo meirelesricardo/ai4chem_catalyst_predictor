@@ -29,7 +29,7 @@ The dataset (`aap9112_data_file_s1.xlsx`) comes from **Perera et al. (*Science*,
 | Base | 7 bases + "no base" |
 | Solvent | 6 solvents |
 
-The target variable is `Product_Yield_PCT_Area_UV` — the reaction yield measured by HPLC-UV (%).
+The target variable is `Product_Yield_PCT_Area_UV`, the reaction yield measured by HPLC-UV (%).
 
 ---
 
@@ -56,6 +56,10 @@ The target variable is `Product_Yield_PCT_Area_UV` — the reaction yield measur
 │   ├── 03_features_engineering.ipynb
 │   ├── 04_model_training.ipynb
 │   └── 05_model_testing_and_comparing.ipynb
+├── predictor/                 # Inference tools (app + CLI)
+│   ├── app.py                 # Streamlit web application
+│   ├── run_predictor.py       # Command-line predictor script
+│   └── smiles_data.py         # SMILES dictionaries for all components
 └── README.md
 ```
 
@@ -121,6 +125,97 @@ Full comparative evaluation of all three models on the held-out test set. Includ
 
 ---
 
+## Model Performance
+
+Model performance was assessed through four metrics: RMSE, MAE, R² score, and Explained Variance. Parity plots (predicted vs. actual yield) were generated for each model.
+
+| Model | RMSE | MAE | R² | Explained Variance |
+|---|---|---|---|---|
+| **Random Forest** | 0.1076 | 0.0760 | 0.8566 | 0.8566 |
+| **XGBoost** | 0.1089 | 0.0800 | 0.8531 | 0.8532 |
+| **Neural Network** | 0.1146 | 0.0842 | 0.8374 | 0.8378 |
+
+All three models produce similar parity plots, with predictions tightly distributed around the ideal diagonal. The Neural Network shows a slightly more dispersed point cloud, consistent with its marginally lower R² and higher error metrics. One shared behaviour across all models is a tendency to **overestimate yields when the actual yield is near zero**, likely because very low-yield reactions are harder to distinguish from moderately low-yield ones in the feature space.
+
+Conversely, all models show a mild tendency to **underestimate high yields**, though analysis of high-confidence predictions (where the model outputs a high yield) shows relatively strong precision in that regime. This asymmetry is actually desirable for the intended use case: when the model predicts a high yield, it is likely to be correct, which is exactly what matters when screening for optimal conditions.
+
+In terms of raw metrics, **Random Forest is the best-performing model**, closely followed by XGBoost. However, **XGBoost is the preferred model for deployment**: it achieves nearly identical performance while being orders of magnitude smaller on disk (~3 MB vs. ~150 MB for Random Forest), resulting in faster load times and leaner inference. This is why XGBoost is used in both the Streamlit app and the CLI predictor.
+
+---
+
+## Inference Tools
+
+Two ready-to-use tools are provided in the `predictor/` directory for running predictions on new reactant pairs without going through the notebooks.
+
+### `app.py` — Streamlit Web Application
+
+A browser-based graphical interface for exploring reaction conditions interactively.
+
+**Features:**
+- Dropdown menus to select the first and second reactant from the dataset
+- Live rendering of both molecular structures (SVG via RDKit) with stereo annotations
+- One-click prediction over all 576 ligand–base–solvent combinations
+- Results displayed as an interactive ranked table with a progress bar for each predicted yield
+- Model and descriptor caches are loaded once at startup and reused across predictions (`@st.cache_resource`)
+
+**To launch:**
+```bash
+cd predictor
+streamlit run app.py
+```
+
+The app will open in your browser at `http://localhost:8501`. Select two reactants, click **"Predict top 5 conditions"**, and the table will display the five highest-yielding ligand–base–solvent combinations along with their predicted yields.
+
+> The app uses the **XGBoost** model with DRFP fingerprints and RDKit molecular descriptors, identical to the training pipeline.
+
+---
+
+### `run_predictor.py` — Command-Line Predictor
+
+A terminal-based alternative for environments where a browser interface is not available or preferred.
+
+**Features:**
+- Interactive numbered menus to select reactants from the dataset (7 type-1 × 4 type-2 reactants)
+- Displays all available options with indices for easy selection
+- Evaluates all 576 combinations and prints the top 5 results as a formatted table
+- Supports multiple predictions in sequence without restarting the script (loop with `y/n` prompt)
+- Identical feature engineering and model inference as the Streamlit app
+
+**To run:**
+```bash
+cd predictor
+python run_predictor.py
+```
+
+**Example output:**
+```
+===========================================
+Suzuki Coupling - Catalytic Yield Predictor
+===========================================
+
+Choose your first reactant:
+   1. ...
+   2. ...
+
+...
+
+===================================================================
+  Top 5 predicted catalytic conditions
+    Reactant 1 : <selected>
+    Reactant 2 : <selected>
+===================================================================
+Rank  Ligand           Base       Solvent                Predicted Yield
+----------------------------------------------------------------------
+1     ...              ...        ...                           87.3 %
+2     ...              ...        ...                           84.1 %
+...
+===================================================================
+```
+
+Both tools share the same `smiles_data.py` module containing the SMILES dictionaries for all reactants, ligands, bases, and solvents.
+
+---
+
 ## Installation
 
 ```bash
@@ -129,7 +224,7 @@ cd ai4chem_catalyst_predictor
 pip install -r requirements.txt
 ```
 
-Key dependencies: `rdkit`, `drfp`, `scikit-learn`, `xgboost`, `torch`, `pytorch-lightning`, `shap`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `joblib`
+Key dependencies: `rdkit`, `drfp`, `scikit-learn`, `xgboost`, `torch`, `pytorch-lightning`, `shap`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `joblib`, `streamlit`
 
 ---
 
@@ -142,6 +237,16 @@ Run the notebooks in order:
 ```
 
 Each notebook reads from the output of the previous one. Start with the raw dataset in `data/raw/`.
+
+Once the models are trained, use either inference tool from the `predictor/` directory:
+
+```bash
+# Web interface
+streamlit run app.py
+
+# Command-line interface
+python run_predictor.py
+```
 
 ---
 
