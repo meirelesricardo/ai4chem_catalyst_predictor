@@ -125,7 +125,7 @@ def main() -> None:
     """
     # Display the header
     print("=" * 43)
-    print("Suzuki Coupling — Catalytic Yield Predictor")
+    print("Suzuki Coupling - Catalytic Yield Predictor")
     print("=" * 43)
 
     # Load the model and the scaler
