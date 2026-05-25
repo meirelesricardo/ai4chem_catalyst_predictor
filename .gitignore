@@ -1,10 +1,10 @@
 # Environment files
 .venv/
 
- # Neural network log files
- lightning_logs/
+# Neural network log files
+notebooks/lightning_logs/
 
  
 predictor/__pycache__/run_predictor.cpython-311.pyc
-models/__pycache__/model_utils.cpython-311.pyc
+models/__pycache__/
 predictor/__pycache__/smiles_data.cpython-311.pyc
