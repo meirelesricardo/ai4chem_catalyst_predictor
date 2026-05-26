@@ -267,3 +267,4 @@ Models are assessed with four metrics:
 
 - Perera, D. et al. *A platform for automated nanomole-scale reaction screening and micromole-scale synthesis in flow.* **Science**, 2018.
 - Probst, D. et al. *Reaction classification and yield prediction using the differential reaction fingerprint DRFP.* **Digital Discovery**, 2022.
+- Schwaller, P. et al. *Prediction of Chemical Reaction Yields Using Deep Learning*. 2020.
